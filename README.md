@@ -1,2 +1,2 @@
-# Wascers_API_Documentation
+# Wascer_API
 This is a documentation of Wascer's API
