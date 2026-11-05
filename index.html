@@ -151,7 +151,8 @@
         SwaggerUIBundle({
           spec: spec,
           dom_id: '#swagger-ui',
-          deepLinking: true,
+          // Sem deep link: o Swagger reescrevia o hash (#ia virava #/ia) e quebrava as âncoras da página.
+          deepLinking: false,
           layout: 'BaseLayout',
           presets: [SwaggerUIBundle.presets.apis],
           plugins: [SwaggerUIBundle.plugins.DownloadUrl],
