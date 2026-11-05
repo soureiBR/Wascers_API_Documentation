@@ -268,3 +268,6 @@ html.dark-mode .swagger-ui .opblock .opblock-section-header, html.dark-mode .swa
 html.dark-mode .swagger-ui .opblock .opblock-section-header h4, html.dark-mode .swagger-ui .opblock .opblock-section-header label { color: var(--text) !important; }
 html.dark-mode .swagger-ui .opblock .highlight-code pre.microlight, html.dark-mode .swagger-ui .opblock pre.microlight, html.dark-mode .swagger-ui .opblock .opblock-body pre.microlight { background: #081222 !important; color: #e6ecf5; }
 .swagger-ui .opblock .highlight-code pre.microlight, .swagger-ui .opblock pre.microlight { background: #0b1b2e !important; color: #e6ecf5; }
+.w-open-ai { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.w-open-ai .w-btn { padding: 8px 16px; font-size: 14px; }
+@media (max-width: 720px) { .w-open-ai .w-btn { flex: 1 1 140px; text-align: center; } }

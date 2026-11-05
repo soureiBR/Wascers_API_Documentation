@@ -97,14 +97,21 @@
         });
 
         // Seção atual em destaque no sumário
+        // As últimas seções são curtas e nunca chegam ao topo da tela: por isso
+        // a seção ativa é a última cujo título já passou do topo, e no fim da
+        // página vale a última. Clique no sumário marca na hora.
         var links = toc.querySelectorAll('a');
-        var obs = new IntersectionObserver(function (entries) {
-          entries.forEach(function (e) {
-            if (!e.isIntersecting) return;
-            links.forEach(function (l) { l.classList.toggle('on', l.getAttribute('href') === '#' + e.target.id); });
-          });
-        }, { rootMargin: '0px 0px -70% 0px' });
-        doc.querySelectorAll('h2, h3').forEach(function (h) { obs.observe(h); });
+        var heads = Array.prototype.slice.call(doc.querySelectorAll('h2, h3'));
+        function mark(id) { links.forEach(function (l) { l.classList.toggle('on', l.getAttribute('href') === '#' + id); }); }
+        function spy() {
+          var atEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+          var current = heads[0];
+          heads.forEach(function (h) { if (h.getBoundingClientRect().top <= 120) current = h; });
+          mark((atEnd ? heads[heads.length - 1] : current).id);
+        }
+        window.addEventListener('scroll', spy, { passive: true });
+        toc.addEventListener('click', function (e) { if (e.target.tagName === 'A') setTimeout(function () { mark(e.target.getAttribute('href').slice(1)); }, 50); });
+        spy();
 
         if (location.hash) { var t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
       });

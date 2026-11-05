@@ -43,7 +43,11 @@
       <details class="w-details">
         <summary>Ver o prompt para o agente de IA</summary>
         <pre class="w-prompt" id="prompt"></pre>
-        <p class="w-note">Cole no agente e peça o que precisa, por exemplo: <i>"ache as compras com gclid dos últimos 7 dias"</i>. Ele só lê, a menos que você peça para gravar ou apagar.</p>
+        <div class="w-open-ai">
+          <a class="w-btn w-btn-ghost" id="open-chatgpt" target="_blank" rel="noreferrer">Abrir no ChatGPT</a>
+          <a class="w-btn w-btn-ghost" id="open-claude" target="_blank" rel="noreferrer">Abrir no Claude</a>
+        </div>
+        <p class="w-note">"Abrir no ChatGPT/Claude" nunca leva a sua chave: o prompt vai com <code>$WASCER_API_KEY</code> e você informa a chave no chat. Cole no agente e peça o que precisa, por exemplo: <i>"ache as compras com gclid dos últimos 7 dias"</i>. Ele só lê, a menos que você peça para gravar ou apagar.</p>
       </details>
       <div class="w-base">URL base para o seu sistema: <code>https://&lt;domínio&gt;/wascer-api/&lt;pk_…&gt;/v1/store</code>. A chave vai no caminho; trate a URL como senha.</div>
     </section>
@@ -92,7 +96,20 @@
         'Não grave nem apague dados sem eu pedir.'
       ].join('\n');
     }
-    function renderPrompt() { document.getElementById('prompt').textContent = buildPrompt(); }
+    // Links de IA com o prompt na URL (padrão ?q= do ChatGPT e do Claude). A
+    // chave fica de fora: URL vai pra histórico e pro servidor deles.
+    function buildPromptNoKey() {
+      var key = document.getElementById('key');
+      var saved = key.value; key.value = '';
+      var p = buildPrompt(); key.value = saved;
+      return p;
+    }
+    function renderPrompt() {
+      document.getElementById('prompt').textContent = buildPrompt();
+      var q = encodeURIComponent(buildPromptNoKey());
+      document.getElementById('open-chatgpt').href = 'https://chatgpt.com/?q=' + q;
+      document.getElementById('open-claude').href = 'https://claude.ai/new?q=' + q;
+    }
     ['host', 'key'].forEach(function (id) { document.getElementById(id).addEventListener('input', renderPrompt); });
     document.getElementById('copy').addEventListener('click', function () {
       var btn = this;
