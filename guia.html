@@ -13,16 +13,116 @@
   <header class="w-header"><div class="in">
     <a class="w-logo" href="./"><svg viewBox="0 0 64 64" aria-hidden="true"><rect class="w-mark" width="64" height="64" rx="12"/><path d="M19 20l13 12-13 12" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="34" y="40" width="13" height="6" rx="2" fill="#fff"/></svg><span>Wascer</span></a>
     <span class="w-tag">Docs · Database API</span>
-    <nav class="w-nav"><a href="./">Referência</a><a href="guia.html" class="on">Guia</a><a href="agentes.html">Para agentes de IA</a><button class="w-theme" id="theme" type="button"></button></nav>
+    <nav class="w-nav"><a href="./#referencia">Rotas</a><a href="guia.html" class="on">Guia</a><button class="w-theme" id="theme" type="button"></button></nav>
   </div></header>
-  <main class="w-main"><article class="w-card w-doc" id="doc">Carregando…</article></main>
+  <div class="g-layout">
+    <aside class="g-side" id="side">
+      <button class="g-side-toggle" id="side-toggle" type="button" aria-expanded="false">Nesta página</button>
+      <nav class="g-toc" id="toc" aria-label="Seções do guia"></nav>
+    </aside>
+    <main class="g-main">
+      <div class="g-top">
+        <div class="g-crumb">Database API <span>/</span> Guia</div>
+        <div class="g-menu">
+          <button type="button" class="g-menu-btn" id="copy-page">Copiar página</button>
+          <button type="button" class="g-menu-btn g-menu-more" id="more" aria-expanded="false" aria-label="Mais opções">▾</button>
+          <div class="g-menu-list" id="more-list" hidden>
+            <a href="database-api.md" target="_blank" rel="noreferrer">Ver como Markdown</a>
+            <a id="open-chatgpt" target="_blank" rel="noreferrer">Abrir no ChatGPT</a>
+            <a id="open-claude" target="_blank" rel="noreferrer">Abrir no Claude</a>
+          </div>
+        </div>
+      </div>
+      <article class="g-doc" id="doc">Carregando…</article>
+    </main>
+  </div>
   <footer class="w-footer">Wascer · <a href="https://wascer.com">wascer.com</a> · Arquivos para ferramentas e agentes: <a href="openapi.json">openapi.json</a> · <a href="llms.txt">llms.txt</a> · <a href="database-api.md">database-api.md</a></footer>
   <script src="https://cdn.jsdelivr.net/npm/marked@14/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.10.0/build/highlight.min.js"></script>
   <script>
     // O guia tem uma fonte só: database-api.md, que agentes também leem cru.
+    var MD_URL = 'https://docs.wascer.com/database-api.md';
+    var ASK = 'Leia a documentação da Wascer Database API em ' + MD_URL + ' e me ajude a usar essa API.';
+    document.getElementById('open-chatgpt').href = 'https://chatgpt.com/?q=' + encodeURIComponent(ASK);
+    document.getElementById('open-claude').href = 'https://claude.ai/new?q=' + encodeURIComponent(ASK);
+
+    function slug(t) {
+      return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    }
+    function copy(text, btn, label) {
+      navigator.clipboard.writeText(text).then(function () {
+        btn.textContent = 'Copiado!';
+        setTimeout(function () { btn.textContent = label; }, 1500);
+      });
+    }
+
+    var markdown = '';
     fetch('database-api.md', { cache: 'no-cache' })
       .then(function (r) { return r.text(); })
-      .then(function (md) { document.getElementById('doc').innerHTML = marked.parse(md); });
+      .then(function (md) {
+        markdown = md;
+        var doc = document.getElementById('doc');
+        doc.innerHTML = marked.parse(md);
+
+        // Títulos com âncora e sumário lateral
+        var toc = document.getElementById('toc');
+        doc.querySelectorAll('h2, h3').forEach(function (h) {
+          h.id = slug(h.textContent);
+          var a = document.createElement('a');
+          a.href = '#' + h.id; a.className = 'g-anchor'; a.textContent = '#'; a.setAttribute('aria-hidden', 'true');
+          h.appendChild(a);
+          var link = document.createElement('a');
+          link.href = '#' + h.id;
+          link.textContent = h.firstChild.textContent;
+          link.className = h.tagName === 'H3' ? 'sub' : '';
+          toc.appendChild(link);
+        });
+
+        // Blocos de código: linguagem, cor e botão copiar
+        doc.querySelectorAll('pre > code').forEach(function (code) {
+          var pre = code.parentNode;
+          var lang = (code.className.match(/language-(\w+)/) || [])[1] || (/^(curl|BASE=|GET |POST )/.test(code.textContent) ? 'bash' : '');
+          if (lang) { code.classList.add('language-' + lang); hljs.highlightElement(code); }
+          var bar = document.createElement('div');
+          bar.className = 'g-code-bar';
+          bar.innerHTML = '<span>' + ({ bash: 'Terminal', json: 'JSON', js: 'JavaScript', javascript: 'JavaScript', python: 'Python' }[lang] || 'Código') + '</span>';
+          var btn = document.createElement('button');
+          btn.type = 'button'; btn.textContent = 'Copiar';
+          btn.addEventListener('click', function () { copy(code.textContent, btn, 'Copiar'); });
+          bar.appendChild(btn);
+          var wrap = document.createElement('div');
+          wrap.className = 'g-code';
+          pre.parentNode.insertBefore(wrap, pre);
+          wrap.appendChild(bar); wrap.appendChild(pre);
+        });
+
+        // Seção atual em destaque no sumário
+        // As últimas seções são curtas e nunca chegam ao topo da tela: por isso
+        // a seção ativa é a última cujo título já passou do topo, e no fim da
+        // página vale a última. Clique no sumário marca na hora.
+        var links = toc.querySelectorAll('a');
+        var heads = Array.prototype.slice.call(doc.querySelectorAll('h2, h3'));
+        function mark(id) { links.forEach(function (l) { l.classList.toggle('on', l.getAttribute('href') === '#' + id); }); }
+        function spy() {
+          var atEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4;
+          var current = heads[0];
+          heads.forEach(function (h) { if (h.getBoundingClientRect().top <= 120) current = h; });
+          mark((atEnd ? heads[heads.length - 1] : current).id);
+        }
+        window.addEventListener('scroll', spy, { passive: true });
+        toc.addEventListener('click', function (e) { if (e.target.tagName === 'A') setTimeout(function () { mark(e.target.getAttribute('href').slice(1)); }, 50); });
+        spy();
+
+        if (location.hash) { var t = document.getElementById(location.hash.slice(1)); if (t) t.scrollIntoView(); }
+      });
+
+    document.getElementById('copy-page').addEventListener('click', function () { copy(markdown, this, 'Copiar página'); });
+    var more = document.getElementById('more'), list = document.getElementById('more-list');
+    more.addEventListener('click', function (e) { e.stopPropagation(); list.hidden = !list.hidden; more.setAttribute('aria-expanded', String(!list.hidden)); });
+    document.addEventListener('click', function () { list.hidden = true; more.setAttribute('aria-expanded', 'false'); });
+    var side = document.getElementById('side'), st = document.getElementById('side-toggle');
+    st.addEventListener('click', function () { var open = side.classList.toggle('open'); st.setAttribute('aria-expanded', String(open)); });
+    document.getElementById('toc').addEventListener('click', function (e) { if (e.target.tagName === 'A') side.classList.remove('open'); });
   </script>
 </body>
 </html>
