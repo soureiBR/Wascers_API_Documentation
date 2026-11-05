@@ -15,32 +15,46 @@
   <header class="w-header"><div class="in">
     <a class="w-logo" href="./"><svg viewBox="0 0 64 64" aria-hidden="true"><rect class="w-mark" width="64" height="64" rx="12"/><path d="M19 20l13 12-13 12" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="34" y="40" width="13" height="6" rx="2" fill="#fff"/></svg><span>Wascer</span></a>
     <span class="w-tag">Docs · Database API</span>
-    <nav class="w-nav"><a href="./" class="on">Referência</a><a href="guia.html">Guia</a><a href="agentes.html">Para agentes de IA</a><button class="w-theme" id="theme" type="button"></button></nav>
+    <nav class="w-nav"><a href="./#referencia" class="on">Referência</a><a href="guia.html">Guia</a><a href="./#ia">Agentes de IA</a><button class="w-theme" id="theme" type="button"></button></nav>
   </div></header>
   <main class="w-main">
     <section class="w-hero">
       <h1>Database API</h1>
-      <p>Leia e grave no Database do seu container sGTM direto pela API, sem depender das tags no GTM. Serve para integrações, scripts e agentes de IA.</p>
+      <p>Leia e grave no Database do seu container sGTM direto pela API, sem depender das tags no GTM. Use num sistema seu ou passe para o seu agente de IA (Claude, ChatGPT, Cursor).</p>
     </section>
 
     <div class="w-steps">
       <div class="w-card w-step"><span class="n">1</span><h3>Crie a chave</h3><p>No painel: <b>Configurações → Chaves de API → Criar Chave de API</b>, com o escopo <code>database:access</code>. Copie a <b>API Key</b> (<code>pk_…</code>). Leva até 2 minutos para ativar.</p></div>
       <div class="w-card w-step"><span class="n">2</span><h3>Pegue o domínio</h3><p>É o domínio do seu GTM server-side: <code>&lt;identificador&gt;.soureicdn.com</code> ou o domínio próprio, na aba <b>Domínios</b> do container.</p></div>
-      <div class="w-card w-step"><span class="n">3</span><h3>Teste aqui</h3><p>Preencha abaixo e clique em <b>Usar</b>. Todas as rotas ficam prontas para o <b>Try it out</b>. Comece por <code>GET /collections</code>.</p></div>
+      <div class="w-card w-step"><span class="n">3</span><h3>Use</h3><p>Preencha abaixo e escolha: <b>Testar nas rotas</b> (Try it out logo abaixo) ou <b>Copiar prompt para IA</b> e colar no seu agente.</p></div>
     </div>
 
-    <section class="w-card w-try">
-      <h2>Testar com o seu container</h2>
-      <p class="sub">Os valores ficam só no seu navegador.</p>
+    <section class="w-card w-try" id="ia">
+      <h2>Conecte o seu container</h2>
+      <p class="sub">Os valores ficam só no seu navegador. Sem a chave, o prompt usa a variável <code>WASCER_API_KEY</code>.</p>
       <form id="start">
-        <label>Domínio do container<input id="host" placeholder="abc123.soureicdn.com" autocomplete="off"></label>
+        <label>Domínio do container<input id="host" placeholder="abc123.soureicdn.com" autocomplete="off" inputmode="url"></label>
         <label>API Key<input id="key" placeholder="pk_…" autocomplete="off"></label>
-        <button class="w-btn" type="submit">Usar</button>
+        <div class="w-actions">
+          <button class="w-btn" type="submit">Testar nas rotas</button>
+          <button class="w-btn w-btn-ghost" type="button" id="copy">Copiar prompt para IA</button>
+        </div>
       </form>
+      <details class="w-details">
+        <summary>Ver o prompt para o agente de IA</summary>
+        <pre class="w-prompt" id="prompt"></pre>
+        <p class="w-note">Cole no agente e peça o que precisa, por exemplo: <i>"ache as compras com gclid dos últimos 7 dias"</i>. Ele só lê, a menos que você peça para gravar ou apagar.</p>
+      </details>
       <div class="w-base">URL base para o seu sistema: <code>https://&lt;domínio&gt;/wascer-api/&lt;pk_…&gt;/v1/store</code>. A chave vai no caminho; trate a URL como senha.</div>
     </section>
 
-    <h2 class="w-section-title">Referência</h2>
+    <div class="w-files">
+      <a class="w-card w-link" href="guia.html"><h3>Guia completo</h3><p>Passo a passo, modelo de dados, paginação, erros e exemplos em curl.</p></a>
+      <a class="w-card w-link" href="llms.txt"><h3>llms.txt</h3><p>Índice para agentes de IA lerem primeiro.</p></a>
+      <a class="w-card w-link" href="openapi.json"><h3>openapi.json</h3><p>Especificação OpenAPI 3 para ferramentas e geradores de cliente.</p></a>
+    </div>
+
+    <h2 class="w-section-title" id="referencia">Referência</h2>
     <div id="swagger-ui"></div>
   </main>
   <footer class="w-footer">Wascer · <a href="https://wascer.com">wascer.com</a> · Arquivos para ferramentas e agentes: <a href="openapi.json">openapi.json</a> · <a href="llms.txt">llms.txt</a> · <a href="database-api.md">database-api.md</a></footer>
@@ -52,10 +66,37 @@
     var prefill = new URLSearchParams(location.hash.replace(/^#/, ''));
     var baseUrl = prefill.get('base_url');
     var apiKey = prefill.get('api_key');
+    var goRef = prefill.get('go') === 'referencia';
     if (baseUrl || apiKey) history.replaceState(null, '', location.pathname + location.search);
 
     document.getElementById('host').value = baseUrl || '';
     document.getElementById('key').value = apiKey || '';
+    setTimeout(renderPrompt, 0);
+
+    var DOCS = 'https://docs.wascer.com/llms.txt';
+    function cleanHost() { return document.getElementById('host').value.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, ''); }
+    function buildPrompt() {
+      var host = cleanHost() || '<domínio-do-container>';
+      var key = document.getElementById('key').value.trim() || '$WASCER_API_KEY';
+      var base = 'https://' + host + '/wascer-api/' + key + '/v1/store';
+      return [
+        'Você tem acesso ao Database do meu container sGTM na Wascer.',
+        'Leia primeiro a documentação: ' + DOCS,
+        'URL base da API: ' + base + (key === '$WASCER_API_KEY' ? ' (a chave está na variável de ambiente WASCER_API_KEY)' : ' (já inclui a minha chave; não a exponha)'),
+        'Comece listando as collections e alguns documentos para entender o formato.',
+        'Para encontrar registros, liste com order=DESC&limit=500 e siga next_cursor até null.',
+        'Não grave nem apague dados sem eu pedir.'
+      ].join('\n');
+    }
+    function renderPrompt() { document.getElementById('prompt').textContent = buildPrompt(); }
+    ['host', 'key'].forEach(function (id) { document.getElementById(id).addEventListener('input', renderPrompt); });
+    document.getElementById('copy').addEventListener('click', function () {
+      var btn = this;
+      navigator.clipboard.writeText(buildPrompt()).then(function () {
+        btn.textContent = 'Prompt copiado!';
+        setTimeout(function () { btn.textContent = 'Copiar prompt para IA'; }, 1500);
+      });
+    });
     document.getElementById('start').addEventListener('submit', function (e) {
       e.preventDefault();
       var host = document.getElementById('host').value.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '');
@@ -63,6 +104,7 @@
       var p = new URLSearchParams();
       if (host) p.set('base_url', host);
       if (key) p.set('api_key', key);
+      p.set('go', 'referencia');
       location.hash = p.toString();
       location.reload();
     });
@@ -95,6 +137,7 @@
           docExpansion: 'list',
           defaultModelsExpandDepth: 1,
           tryItOutEnabled: !!apiKey,
+          onComplete: function () { if (goRef) document.getElementById('referencia').scrollIntoView(); },
         });
       });
   </script>
