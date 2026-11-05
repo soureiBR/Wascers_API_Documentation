@@ -3,34 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wascer API — Documentação</title>
+  <title>Database API · Wascer Docs</title>
   <link rel="alternate" type="text/markdown" href="database-api.md" title="Guia da Database API">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
-  <style>
-    html { box-sizing: border-box; overflow-y: scroll; }
-    *, *:before, *:after { box-sizing: inherit; }
-    body { margin: 0; background: #fafafa; }
-    .swagger-ui .topbar { display: none; }
-    .start { max-width: 1460px; margin: 0 auto; padding: 16px 20px 0; font-family: sans-serif; }
-    .start form { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; background: #fff; border: 1px solid #d8dde7; border-radius: 6px; padding: 12px 16px; }
-    .start label { display: flex; flex-direction: column; font-size: 12px; font-weight: 600; color: #3b4151; gap: 4px; flex: 1 1 260px; }
-    .start input { font: 14px monospace; padding: 8px; border: 1px solid #d8dde7; border-radius: 4px; }
-    .start button { padding: 9px 18px; background: #4990e2; color: #fff; border: 0; border-radius: 4px; font-weight: 600; cursor: pointer; }
-    .start p { font-size: 13px; color: #3b4151; margin: 8px 2px 0; }
-  </style>
+  <link rel="stylesheet" href="wascer.css">
+  <script src="theme.js"></script>
 </head>
 <body>
-  <div class="start">
-    <form id="start">
-      <label>Domínio do container<input id="host" placeholder="abc123.soureicdn.com" autocomplete="off"></label>
-      <label>API Key (pk_…)<input id="key" placeholder="pk_…" autocomplete="off"></label>
-      <button type="submit">Usar</button>
-    </form>
-    <p>Não tem a chave? Veja <b>Como começar</b> logo abaixo. Os valores ficam só no seu navegador.</p>
-  </div>
-  <div id="swagger-ui"></div>
+  <header class="w-header"><div class="in">
+    <a class="w-logo" href="./"><svg viewBox="0 0 64 64" aria-hidden="true"><rect class="w-mark" width="64" height="64" rx="12"/><path d="M19 20l13 12-13 12" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="34" y="40" width="13" height="6" rx="2" fill="#fff"/></svg><span>Wascer</span></a>
+    <span class="w-tag">Docs · Database API</span>
+    <nav class="w-nav"><a href="./" class="on">Referência</a><a href="guia.html">Guia</a><a href="agentes.html">Para agentes de IA</a><button class="w-theme" id="theme" type="button"></button></nav>
+  </div></header>
+  <main class="w-main">
+    <section class="w-hero">
+      <h1>Database API</h1>
+      <p>Leia e grave no Database do seu container sGTM direto pela API, sem depender das tags no GTM. Serve para integrações, scripts e agentes de IA.</p>
+    </section>
+
+    <div class="w-steps">
+      <div class="w-card w-step"><span class="n">1</span><h3>Crie a chave</h3><p>No painel: <b>Configurações → Chaves de API → Criar Chave de API</b>, com o escopo <code>database:access</code>. Copie a <b>API Key</b> (<code>pk_…</code>). Leva até 2 minutos para ativar.</p></div>
+      <div class="w-card w-step"><span class="n">2</span><h3>Pegue o domínio</h3><p>É o domínio do seu GTM server-side: <code>&lt;identificador&gt;.soureicdn.com</code> ou o domínio próprio, na aba <b>Domínios</b> do container.</p></div>
+      <div class="w-card w-step"><span class="n">3</span><h3>Teste aqui</h3><p>Preencha abaixo e clique em <b>Usar</b>. Todas as rotas ficam prontas para o <b>Try it out</b>. Comece por <code>GET /collections</code>.</p></div>
+    </div>
+
+    <section class="w-card w-try">
+      <h2>Testar com o seu container</h2>
+      <p class="sub">Os valores ficam só no seu navegador.</p>
+      <form id="start">
+        <label>Domínio do container<input id="host" placeholder="abc123.soureicdn.com" autocomplete="off"></label>
+        <label>API Key<input id="key" placeholder="pk_…" autocomplete="off"></label>
+        <button class="w-btn" type="submit">Usar</button>
+      </form>
+      <div class="w-base">URL base para o seu sistema: <code>https://&lt;domínio&gt;/wascer-api/&lt;pk_…&gt;/v1/store</code>. A chave vai no caminho; trate a URL como senha.</div>
+    </section>
+
+    <h2 class="w-section-title">Referência</h2>
+    <div id="swagger-ui"></div>
+  </main>
+  <footer class="w-footer">Wascer · <a href="https://wascer.com">wascer.com</a> · Arquivos para ferramentas e agentes: <a href="openapi.json">openapi.json</a> · <a href="llms.txt">llms.txt</a> · <a href="database-api.md">database-api.md</a></footer>
   <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
-  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
   <script>
     // O painel abre esta página com #base_url=…&api_key=… já preenchidos. Vai no
     // fragmento, não na query, para a chave não chegar a servidor nem log; e sai
@@ -53,7 +67,7 @@
       location.reload();
     });
 
-    fetch('openapi.json')
+    fetch('openapi.json', { cache: 'no-cache' })
       .then(function (r) { return r.json(); })
       .then(function (spec) {
         if (baseUrl) {
@@ -75,8 +89,8 @@
           spec: spec,
           dom_id: '#swagger-ui',
           deepLinking: true,
-          layout: 'StandaloneLayout',
-          presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+          layout: 'BaseLayout',
+          presets: [SwaggerUIBundle.presets.apis],
           plugins: [SwaggerUIBundle.plugins.DownloadUrl],
           docExpansion: 'list',
           defaultModelsExpandDepth: 1,

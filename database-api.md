@@ -13,7 +13,7 @@ Referência interativa: https://docs.wascer.com/
 2. **Pegue o domínio do container**: o mesmo do seu GTM server-side (`<identificador>.soureicdn.com` ou o domínio próprio, na aba **Domínios** do container).
 3. **Teste:** `curl -s "https://<domínio>/wascer-api/<API_KEY>/v1/store/collections"` deve listar as suas collections. Se vier `403`, confira a chave e o escopo; `503`, espere os 2 minutos da ativação.
 
-Para testar pelo navegador, abra https://docs.wascer.com/, preencha domínio e API Key no topo e use **Try it out**.
+Para testar pelo navegador, abra https://docs.wascer.com/, preencha domínio e API Key em "Testar com o seu container" e use **Try it out**.
 
 ## 2. URL base
 

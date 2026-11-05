@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guia da Database API · Wascer Docs</title>
+  <link rel="alternate" type="text/markdown" href="database-api.md">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="wascer.css">
+  <script src="theme.js"></script>
+</head>
+<body>
+  <header class="w-header"><div class="in">
+    <a class="w-logo" href="./"><svg viewBox="0 0 64 64" aria-hidden="true"><rect class="w-mark" width="64" height="64" rx="12"/><path d="M19 20l13 12-13 12" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="34" y="40" width="13" height="6" rx="2" fill="#fff"/></svg><span>Wascer</span></a>
+    <span class="w-tag">Docs · Database API</span>
+    <nav class="w-nav"><a href="./">Referência</a><a href="guia.html" class="on">Guia</a><a href="agentes.html">Para agentes de IA</a><button class="w-theme" id="theme" type="button"></button></nav>
+  </div></header>
+  <main class="w-main"><article class="w-card w-doc" id="doc">Carregando…</article></main>
+  <footer class="w-footer">Wascer · <a href="https://wascer.com">wascer.com</a> · Arquivos para ferramentas e agentes: <a href="openapi.json">openapi.json</a> · <a href="llms.txt">llms.txt</a> · <a href="database-api.md">database-api.md</a></footer>
+  <script src="https://cdn.jsdelivr.net/npm/marked@14/marked.min.js"></script>
+  <script>
+    // O guia tem uma fonte só: database-api.md, que agentes também leem cru.
+    fetch('database-api.md', { cache: 'no-cache' })
+      .then(function (r) { return r.text(); })
+      .then(function (md) { document.getElementById('doc').innerHTML = marked.parse(md); });
+  </script>
+</body>
+</html>

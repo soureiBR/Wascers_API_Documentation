@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agentes de IA · Wascer Docs</title>
+  <link rel="alternate" type="text/plain" href="llms.txt">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="wascer.css">
+  <script src="theme.js"></script>
+</head>
+<body>
+  <header class="w-header"><div class="in">
+    <a class="w-logo" href="./"><svg viewBox="0 0 64 64" aria-hidden="true"><rect class="w-mark" width="64" height="64" rx="12"/><path d="M19 20l13 12-13 12" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="34" y="40" width="13" height="6" rx="2" fill="#fff"/></svg><span>Wascer</span></a>
+    <span class="w-tag">Docs · Database API</span>
+    <nav class="w-nav"><a href="./">Referência</a><a href="guia.html">Guia</a><a href="agentes.html" class="on">Para agentes de IA</a><button class="w-theme" id="theme" type="button"></button></nav>
+  </div></header>
+  <main class="w-main">
+    <section class="w-hero">
+      <h1>Use com o seu agente de IA</h1>
+      <p>Claude, ChatGPT, Cursor ou qualquer agente que faça chamadas HTTP consegue ler e consultar o Database do seu container. Basta passar a documentação e a sua URL base.</p>
+    </section>
+
+    <div class="w-steps">
+      <div class="w-card w-step"><span class="n">1</span><h3>Crie a chave</h3><p>No painel: <b>Configurações → Chaves de API → Criar Chave de API</b>, com o escopo <code>database:access</code>. Use a <b>API Key</b> (<code>pk_…</code>).</p></div>
+      <div class="w-card w-step"><span class="n">2</span><h3>Gere o prompt</h3><p>Preencha o domínio do container e a chave abaixo e clique em <b>Copiar prompt</b>.</p></div>
+      <div class="w-card w-step"><span class="n">3</span><h3>Cole no agente</h3><p>Cole o prompt e peça o que precisa, por exemplo: <i>"ache as compras com gclid dos últimos 7 dias"</i>.</p></div>
+    </div>
+
+    <section class="w-card w-try">
+      <h2>Prompt para o agente</h2>
+      <p class="sub">Os valores ficam só no seu navegador. Sem a chave, o prompt usa a variável <code>WASCER_API_KEY</code>.</p>
+      <form id="prompt-form">
+        <label>Domínio do container<input id="host" placeholder="abc123.soureicdn.com" autocomplete="off"></label>
+        <label>API Key<input id="key" placeholder="pk_… (opcional)" autocomplete="off"></label>
+        <button class="w-btn" type="submit" id="copy">Copiar prompt</button>
+      </form>
+      <pre class="w-prompt" id="prompt"></pre>
+    </section>
+
+    <h2 class="w-section-title">Arquivos para o agente</h2>
+    <div class="w-steps">
+      <a class="w-card w-step w-link" href="llms.txt"><h3>llms.txt</h3><p>Índice da documentação no formato que agentes leem primeiro.</p></a>
+      <a class="w-card w-step w-link" href="database-api.md"><h3>database-api.md</h3><p>Guia completo em Markdown: autenticação, rotas, paginação, erros e regras para agentes.</p></a>
+      <a class="w-card w-step w-link" href="openapi.json"><h3>openapi.json</h3><p>Especificação OpenAPI 3, para ferramentas que geram cliente ou chamam a API sozinhas.</p></a>
+    </div>
+
+    <h2 class="w-section-title">Boas práticas</h2>
+    <div class="w-card w-doc">
+      <ul>
+        <li>A URL base contém a chave. Prefira guardar a chave numa variável de ambiente (<code>WASCER_API_KEY</code>) em vez de colar no chat.</li>
+        <li>O prompt pede que o agente só leia. Para gravar ou apagar dados, peça explicitamente.</li>
+        <li>Para cortar o acesso do agente, revogue a chave em <b>Configurações → Chaves de API</b>. Leva até 2 minutos.</li>
+      </ul>
+    </div>
+  </main>
+  <footer class="w-footer">Wascer · <a href="https://wascer.com">wascer.com</a> · Arquivos para ferramentas e agentes: <a href="openapi.json">openapi.json</a> · <a href="llms.txt">llms.txt</a> · <a href="database-api.md">database-api.md</a></footer>
+  <script>
+    var DOCS = 'https://docs.wascer.com/llms.txt';
+    function build() {
+      var host = document.getElementById('host').value.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, '') || '<domínio-do-container>';
+      var key = document.getElementById('key').value.trim() || '$WASCER_API_KEY';
+      var base = 'https://' + host + '/wascer-api/' + key + '/v1/store';
+      return [
+        'Você tem acesso ao Database do meu container sGTM na Wascer.',
+        'Leia primeiro a documentação: ' + DOCS,
+        'URL base da API: ' + base + (key === '$WASCER_API_KEY' ? ' (a chave está na variável de ambiente WASCER_API_KEY)' : ' (já inclui a minha chave; não a exponha)'),
+        'Comece listando as collections e alguns documentos para entender o formato.',
+        'Para encontrar registros, liste com order=DESC&limit=500 e siga next_cursor até null.',
+        'Não grave nem apague dados sem eu pedir.'
+      ].join('\n');
+    }
+    function render() { document.getElementById('prompt').textContent = build(); }
+    ['host', 'key'].forEach(function (id) { document.getElementById(id).addEventListener('input', render); });
+    document.getElementById('prompt-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var btn = document.getElementById('copy');
+      navigator.clipboard.writeText(build()).then(function () {
+        btn.textContent = 'Copiado!';
+        setTimeout(function () { btn.textContent = 'Copiar prompt'; }, 1500);
+      });
+    });
+    render();
+  </script>
+</body>
+</html>
