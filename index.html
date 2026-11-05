@@ -8,8 +8,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css">
-  <link rel="stylesheet" href="wascer.css">
-  <script src="theme.js"></script>
+  <link rel="stylesheet" href="wascer.css?v=20261105">
+  <script src="theme.js?v=20261105"></script>
 </head>
 <body>
   <header class="w-header"><div class="in">
@@ -20,7 +20,7 @@
   <main class="w-main">
     <section class="w-hero">
       <h1>Database API</h1>
-      <p>Leia e grave no Database do seu container sGTM direto pela API, sem depender das tags no GTM. Use num sistema seu ou passe para o seu agente de IA (Claude, ChatGPT, Cursor).</p>
+      <p>Leia e grave no Database do seu container sGTM direto pela API, sem depender das tags no GTM. Use num sistema seu ou passe para o seu agente de IA.</p>
     </section>
 
     <div class="w-steps">
@@ -43,11 +43,7 @@
       <details class="w-details">
         <summary>Ver o prompt para o agente de IA</summary>
         <pre class="w-prompt" id="prompt"></pre>
-        <div class="w-open-ai">
-          <a class="w-btn w-btn-ghost" id="open-chatgpt" target="_blank" rel="noreferrer">Abrir no ChatGPT</a>
-          <a class="w-btn w-btn-ghost" id="open-claude" target="_blank" rel="noreferrer">Abrir no Claude</a>
-        </div>
-        <p class="w-note">"Abrir no ChatGPT/Claude" nunca leva a sua chave: o prompt vai com <code>$WASCER_API_KEY</code> e você informa a chave no chat. Cole no agente e peça o que precisa, por exemplo: <i>"ache as compras com gclid dos últimos 7 dias"</i>. Ele só lê, a menos que você peça para gravar ou apagar.</p>
+        <p class="w-note">Cole no agente de IA que você usa e peça o que precisa, por exemplo: <i>"ache as compras com gclid dos últimos 7 dias"</i>. Ele só lê, a menos que você peça para gravar ou apagar.</p>
       </details>
       <div class="w-base">URL base para o seu sistema: <code>https://&lt;domínio&gt;/wascer-api/&lt;pk_…&gt;/v1/store</code>. A chave vai no caminho; trate a URL como senha.</div>
     </section>
@@ -81,6 +77,8 @@
     document.getElementById('key').value = apiKey || '';
     setTimeout(renderPrompt, 0);
 
+    // O Swagger só escolhe as cores dos exemplos ao carregar.
+    document.addEventListener('wascer-theme', function () { location.reload(); });
     var DOCS = 'https://docs.wascer.com/llms.txt';
     function cleanHost() { return document.getElementById('host').value.trim().replace(/^https?:\/\//, '').replace(/\/.*$/, ''); }
     function buildPrompt() {
@@ -96,20 +94,7 @@
         'Não grave nem apague dados sem eu pedir.'
       ].join('\n');
     }
-    // Links de IA com o prompt na URL (padrão ?q= do ChatGPT e do Claude). A
-    // chave fica de fora: URL vai pra histórico e pro servidor deles.
-    function buildPromptNoKey() {
-      var key = document.getElementById('key');
-      var saved = key.value; key.value = '';
-      var p = buildPrompt(); key.value = saved;
-      return p;
-    }
-    function renderPrompt() {
-      document.getElementById('prompt').textContent = buildPrompt();
-      var q = encodeURIComponent(buildPromptNoKey());
-      document.getElementById('open-chatgpt').href = 'https://chatgpt.com/?q=' + q;
-      document.getElementById('open-claude').href = 'https://claude.ai/new?q=' + q;
-    }
+    function renderPrompt() { document.getElementById('prompt').textContent = buildPrompt(); }
     ['host', 'key'].forEach(function (id) { document.getElementById(id).addEventListener('input', renderPrompt); });
     document.getElementById('copy').addEventListener('click', function () {
       var btn = this;
@@ -159,7 +144,8 @@
           docExpansion: 'list',
           defaultModelsExpandDepth: 1,
           tryItOutEnabled: !!apiKey,
-          syntaxHighlight: { activated: true, theme: 'nord' },
+          // Cores dos exemplos: tema claro do Swagger no claro, nord no escuro.
+          syntaxHighlight: { activated: true, theme: document.documentElement.classList.contains('dark-mode') ? 'nord' : 'idea' },
           onComplete: function () { if (goRef) setTimeout(function () { document.getElementById('referencia').scrollIntoView(); }, 300); },
         });
       });
