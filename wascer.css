@@ -82,3 +82,8 @@ code, .w-code { font-family: var(--mono); font-size: 0.88em; background: var(--s
 .w-doc table { border-collapse: collapse; width: 100%; font-size: 14px; }
 .w-doc th, .w-doc td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; vertical-align: top; }
 .w-doc th { background: var(--surface2); color: var(--text); }
+
+.w-prompt { margin: 16px 0 0; background: var(--logo); color: #e6ecf5; font: 13px/1.6 var(--mono); padding: 16px; border-radius: 10px; white-space: pre-wrap; word-break: break-all; }
+a.w-link { text-decoration: none; color: inherit; transition: border-color .15s; }
+a.w-link:hover { border-color: var(--brand); }
+a.w-link h3 { font-family: var(--mono); color: var(--brand); }
