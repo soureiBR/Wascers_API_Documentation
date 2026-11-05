@@ -16,6 +16,7 @@ a { color: var(--brand); }
 .w-header .in { max-width: 1120px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 16px; }
 .w-logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--logo); font-weight: 800; font-size: 22px; letter-spacing: -0.02em; }
 .w-logo svg { width: 30px; height: 30px; }
+.w-mark { fill: var(--logo); }
 .w-tag { font-size: 13px; color: var(--text2); border-left: 1px solid var(--border); padding-left: 16px; }
 .w-nav { margin-left: auto; display: flex; gap: 18px; font-size: 14px; }
 .w-nav a { color: var(--text2); text-decoration: none; font-weight: 500; }
@@ -87,3 +88,49 @@ code, .w-code { font-family: var(--mono); font-size: 0.88em; background: var(--s
 a.w-link { text-decoration: none; color: inherit; transition: border-color .15s; }
 a.w-link:hover { border-color: var(--brand); }
 a.w-link h3 { font-family: var(--mono); color: var(--brand); }
+
+/* Botão de tema */
+.w-theme { appearance: none; display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); cursor: pointer; margin-left: 4px; }
+.w-theme:hover { color: var(--brand); border-color: var(--brand); }
+.w-nav { align-items: center; }
+
+/* Swagger sem fundo próprio: herda a página nos dois temas */
+.swagger-ui, html.dark-mode .swagger-ui { background: transparent; color: var(--text); }
+.swagger-ui .scheme-container, html.dark-mode .swagger-ui .scheme-container { background: var(--surface); border: 1px solid var(--border); }
+.swagger-ui .opblock-tag { color: var(--text) !important; border-bottom-color: var(--border) !important; }
+.swagger-ui .opblock .opblock-section-header, html.dark-mode .swagger-ui .opblock .opblock-section-header { background: var(--surface2); }
+.swagger-ui .opblock-section-header h4, .swagger-ui label, .swagger-ui .parameter__name, .swagger-ui .response-col_status, .swagger-ui table thead tr th, .swagger-ui table thead tr td, .swagger-ui .tab li, .swagger-ui .opblock-description-wrapper p, .swagger-ui .responses-inner h4, .swagger-ui .responses-inner h5, .swagger-ui .servers-title, .swagger-ui .computed-url code, .swagger-ui .prop-type, .swagger-ui .model-title, .swagger-ui .model { color: var(--text) !important; }
+.swagger-ui .parameter__type, .swagger-ui .parameter__in, .swagger-ui .markdown p, .swagger-ui .renderedMarkdown p, .swagger-ui .response-col_description { color: var(--text2) !important; }
+.swagger-ui section.models, html.dark-mode .swagger-ui section.models { background: var(--surface); border: 1px solid var(--border); }
+.swagger-ui section.models .model-container, html.dark-mode .swagger-ui section.models .model-container { background: var(--surface2); }
+.swagger-ui section.models h4, .swagger-ui section.models h4 span { color: var(--text) !important; }
+html.dark-mode .swagger-ui input[type=text], html.dark-mode .swagger-ui textarea, html.dark-mode .swagger-ui select { background: var(--surface2); color: var(--text); border-color: var(--border); }
+html.dark-mode .swagger-ui .opblock .opblock-summary-control svg, html.dark-mode .swagger-ui .opblock-control-arrow svg, html.dark-mode .swagger-ui svg.arrow { fill: var(--text2); color: var(--text2); }
+html.dark-mode .swagger-ui .btn { color: var(--text); border-color: var(--border); background: var(--surface2); }
+html.dark-mode .swagger-ui .btn.execute { background: var(--brand); color: #fff; border-color: var(--brand); }
+html.dark-mode .swagger-ui .btn.try-out__btn { color: var(--brand); border-color: var(--brand); background: transparent; }
+html.dark-mode .swagger-ui .markdown code, html.dark-mode .swagger-ui .renderedMarkdown code { background: var(--surface2); color: var(--text); }
+
+/* Tema escuro: tokens dark do email-brand.ts */
+html.dark-mode {
+  --bg: #060d17; --surface: #0f1e33; --surface2: #14233b;
+  --text: #e6ecf5; --text2: #8da2bf; --muted: #6b7e9c; --border: #1f3050;
+  --logo: #2d6cdf; --info-bg: #10233f; --info-fg: #7fb0ff;
+  background: var(--bg); color-scheme: dark;
+}
+html.dark-mode .w-logo { color: var(--text); }
+html.dark-mode .w-step .n { background: var(--brand); }
+html.dark-mode .w-prompt, html.dark-mode .w-doc pre { background: #081222; border: 1px solid var(--border); }
+html.dark-mode .w-try input:focus { background: var(--surface2); }
+html.dark-mode .swagger-ui .model-box, html.dark-mode .swagger-ui section.models .model-container, html.dark-mode .swagger-ui .model-box-control, html.dark-mode .swagger-ui .models-control { background: var(--surface2) !important; }
+html.dark-mode .swagger-ui .opblock.opblock-get .opblock-summary-method { background: var(--brand); }
+html.dark-mode .swagger-ui .opblock.opblock-post .opblock-summary-method { background: #15803d; }
+html.dark-mode .swagger-ui .opblock.opblock-put .opblock-summary-method { background: #b45309; }
+html.dark-mode .swagger-ui .opblock.opblock-patch .opblock-summary-method { background: #6d28d9; }
+html.dark-mode .swagger-ui .opblock.opblock-delete .opblock-summary-method { background: #b91c1c; }
+html.dark-mode .swagger-ui .opblock .opblock-summary-method { color: #fff; }
+html.dark-mode .swagger-ui .opblock-body pre.microlight, html.dark-mode .swagger-ui .highlight-code > .microlight { background: #081222 !important; border: 1px solid var(--border); }
+html.dark-mode .swagger-ui .responses-inner, html.dark-mode .swagger-ui .opblock-body, html.dark-mode .swagger-ui .parameters-container, html.dark-mode .swagger-ui .table-container { background: transparent; }
+html.dark-mode .swagger-ui .opblock .opblock-section-header { box-shadow: none; }
+html.dark-mode .swagger-ui .tab li button.tablinks, html.dark-mode .swagger-ui .response-control-media-type__accept-message { color: var(--text) !important; }
+.swagger-ui .btn.execute, html.dark-mode .swagger-ui .btn.execute { background: var(--brand) !important; border-color: var(--brand) !important; color: #fff !important; }
