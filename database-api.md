@@ -59,6 +59,10 @@ GET /collections/{c}/documents?order=DESC&limit=500&cursor=<next_cursor>
 - Repita com o `next_cursor` até ele vir `null`, ou até passar da data que você precisa (`created_at` em ordem decrescente).
 - Se você controla a gravação, salve já pensando na consulta: uma collection por tipo (ex.: `purchases`) e a `document_key` igual ao ID que você vai procurar (ex.: número do pedido), para ler direto com `GET /collections/purchases/documents/{pedido}`.
 
+### Em breve: busca por campo
+
+A rota `POST /collections/{c}/documents/query` já foi feita e está sendo liberada aos poucos nos containers. Ela filtra pelo conteúdo do `data` (ex.: `{"filter":{"conditions":[{"field":"gclid","operator":"exists"}]}}`) sem você precisar listar tudo. Enquanto não chegar no seu container ela responde erro (a requisição cai no sGTM); até lá, use a listagem acima.
+
 ## 6. Erros
 
 Corpo: `{ "code": "...", "message": "..." }`.

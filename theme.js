@@ -1,11 +1,11 @@
-// Tema claro/escuro da doc. Começa pelo que a pessoa escolheu antes ou, na
-// primeira visita, pelo tema do sistema. A classe `dark-mode` no <html> é a
+// Tema claro/escuro da doc. Sempre começa claro; escuro só quando a pessoa
+// escolhe no botão (a escolha fica salva). A classe `dark-mode` no <html> é a
 // mesma que o Swagger UI usa, então a referência acompanha o resto da página.
 (function () {
   var KEY = 'wascer-docs-theme';
   var saved = null;
   try { saved = localStorage.getItem(KEY); } catch (e) {}
-  var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  var dark = saved === 'dark';
   document.documentElement.classList.toggle('dark-mode', dark);
 
   window.addEventListener('DOMContentLoaded', function () {

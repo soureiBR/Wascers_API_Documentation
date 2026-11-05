@@ -323,6 +323,89 @@
         ]
       }
     },
+    "/wascer-api/{api_key}/v1/store/collections/{collection_name}/documents/query": {
+      "post": {
+        "description": "**Em breve.** Esta rota já foi feita e está sendo liberada aos poucos nos containers. Enquanto não chegar no seu, ela responde erro (a requisição cai no sGTM): use a listagem (`GET …/documents?order=DESC`) e filtre do seu lado.\n\nFiltra a collection por campos do `data`, do mais recente para o mais antigo. Cada chamada lê no máximo 1000 documentos; enquanto `next_cursor` não for nulo, chame de novo com ele para continuar. Use `created_after`/`created_before` para limitar a janela.",
+        "operationId": "WascerApiController_queryDocuments",
+        "parameters": [
+          {
+            "name": "collection_name",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "example": "purchases",
+              "type": "string"
+            }
+          },
+          {
+            "name": "api_key",
+            "required": true,
+            "in": "path",
+            "description": "Chave pública (`pk_…`) de uma API key com escopo `database:access`, criada no painel em Configurações → API keys. Vale para os containers do dono da chave.",
+            "schema": {
+              "example": "pk_0123456789abcdef"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryDocumentsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryDocumentsResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Filtro inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WascerErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "API key inválida ou ausente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WascerErrorResponseDto"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Feature desligada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WascerErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Em breve: buscar documentos por campo",
+        "tags": [
+          "Wascer API — Collections & Documents"
+        ],
+        "deprecated": true
+      }
+    },
     "/wascer-api/{api_key}/v1/store/collections/{collection_name}/documents/{document_key}": {
       "get": {
         "description": "Retorna um documento pelo `document_key`.",
@@ -876,6 +959,101 @@
         },
         "required": [
           "data"
+        ]
+      },
+      "QueryDocumentsDto": {
+        "type": "object",
+        "properties": {
+          "filter": {
+            "type": "object",
+            "description": "Condições sobre campos do `data` (caminho com ponto, ex.: `user_data.email`). Até 10 condições, combinadas por `and` (padrão) ou `or`. Operadores: equal, not-equal, exists, not-exists, contains, not-contains, gt, gte, lt, lte. `exists`/`not-exists` não usam `value`. Sem filtro, retorna todos os documentos da janela.",
+            "additionalProperties": true,
+            "example": {
+              "operator": "and",
+              "conditions": [
+                {
+                  "field": "event_name",
+                  "operator": "equal",
+                  "value": "purchase"
+                },
+                {
+                  "field": "gclid",
+                  "operator": "exists"
+                }
+              ]
+            }
+          },
+          "created_after": {
+            "type": "string",
+            "description": "Só documentos criados a partir desta data (ISO 8601).",
+            "example": "2026-10-27T00:00:00Z"
+          },
+          "created_before": {
+            "type": "string",
+            "description": "Só documentos criados até esta data (ISO 8601).",
+            "example": "2026-11-03T23:59:59Z"
+          },
+          "order": {
+            "type": "string",
+            "description": "Ordem por data de criação. Padrão: mais recentes primeiro.",
+            "enum": [
+              "ASC",
+              "DESC"
+            ],
+            "default": "DESC"
+          },
+          "limit": {
+            "type": "number",
+            "description": "Máximo de documentos encontrados por resposta.",
+            "minimum": 1,
+            "maximum": 500,
+            "default": 50
+          },
+          "cursor": {
+            "type": "string",
+            "description": "`next_cursor` da resposta anterior, para continuar a busca."
+          }
+        }
+      },
+      "QueryDocumentsResponseDto": {
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WascerDocumentDto"
+            }
+          },
+          "next_cursor": {
+            "type": "object",
+            "description": "Cursor para a próxima página (null quando não houver mais)",
+            "nullable": true,
+            "example": "dXNlci0xMDA="
+          },
+          "order": {
+            "type": "string",
+            "enum": [
+              "ASC",
+              "DESC"
+            ],
+            "example": "ASC"
+          },
+          "limit": {
+            "type": "number",
+            "example": 50
+          },
+          "scanned": {
+            "type": "number",
+            "description": "Documentos lidos nesta chamada (no máximo 1000). Com `next_cursor` não nulo há mais a percorrer, mesmo que `documents` venha vazio.",
+            "example": 1000
+          }
+        },
+        "required": [
+          "documents",
+          "next_cursor",
+          "order",
+          "limit",
+          "scanned"
         ]
       }
     }
