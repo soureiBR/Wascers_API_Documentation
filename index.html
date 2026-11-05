@@ -15,7 +15,7 @@
   <header class="w-header"><div class="in">
     <a class="w-logo" href="./"><svg viewBox="0 0 64 64" aria-hidden="true"><rect class="w-mark" width="64" height="64" rx="12"/><path d="M19 20l13 12-13 12" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><rect x="34" y="40" width="13" height="6" rx="2" fill="#fff"/></svg><span>Wascer</span></a>
     <span class="w-tag">Docs · Database API</span>
-    <nav class="w-nav"><a href="./#referencia" class="on">Referência</a><a href="guia.html">Guia</a><button class="w-theme" id="theme" type="button"></button></nav>
+    <nav class="w-nav"><a href="./#referencia" class="on">Rotas</a><a href="guia.html">Guia</a><button class="w-theme" id="theme" type="button"></button></nav>
   </div></header>
   <main class="w-main">
     <section class="w-hero">
@@ -49,7 +49,9 @@
     </section>
 
 
-    <h2 class="w-section-title" id="referencia">Referência</h2>
+    <h2 class="w-section-title" id="referencia">Rotas da API</h2>
+    <p class="w-ref-sub">Todas as rotas da Database API. Abra uma rota e use <b>Try it out</b> para chamar o seu container daqui mesmo.</p>
+    <div class="w-ref-bar empty" id="ref-bar">Para testar as rotas, preencha o domínio e a chave em <a href="#ia">Conecte o seu container</a>.</div>
     <div id="swagger-ui"></div>
   </main>
   <footer class="w-footer">Wascer · <a href="https://wascer.com">wascer.com</a> · Arquivos para ferramentas e agentes: <a href="openapi.json">openapi.json</a> · <a href="llms.txt">llms.txt</a> · <a href="database-api.md">database-api.md</a></footer>
@@ -62,6 +64,13 @@
     var baseUrl = prefill.get('base_url');
     var apiKey = prefill.get('api_key');
     var goRef = prefill.get('go') === 'referencia';
+    if (baseUrl) {
+      var bar = document.getElementById('ref-bar');
+      bar.classList.remove('empty');
+      bar.innerHTML = 'Chamando <b>https://' + baseUrl.replace(/^https?:\/\//, '').replace(/[<>&"]/g, '') + '</b>' +
+        (apiKey ? ' com a chave <code>' + apiKey.slice(0, 6).replace(/[<>&"]/g, '') + '…</code>' : ' (falta a chave)') +
+        ' · <a href="#ia">trocar</a>';
+    }
     if (baseUrl || apiKey) history.replaceState(null, '', location.pathname + location.search);
 
     document.getElementById('host').value = baseUrl || '';
@@ -132,7 +141,8 @@
           docExpansion: 'list',
           defaultModelsExpandDepth: 1,
           tryItOutEnabled: !!apiKey,
-          onComplete: function () { if (goRef) document.getElementById('referencia').scrollIntoView(); },
+          syntaxHighlight: { activated: true, theme: 'nord' },
+          onComplete: function () { if (goRef) setTimeout(function () { document.getElementById('referencia').scrollIntoView(); }, 300); },
         });
       });
   </script>

@@ -38,31 +38,43 @@
             }
           },
           "400": {
-            "description": "Nome inválido",
+            "description": "Requisição inválida (corpo, filtro, cursor ou nome)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_INVALID_REQUEST",
+                  "message": "collection_name must match ^[a-zA-Z0-9_-]{1,64}$"
                 }
               }
             }
           },
-          "401": {
-            "description": "API key inválida ou ausente",
+          "403": {
+            "description": "Chave errada, revogada ou sem o escopo database:access",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FORBIDDEN",
+                  "message": "invalid api key"
                 }
               }
             }
           },
           "503": {
-            "description": "Feature desligada",
+            "description": "API ainda não ativa no container (crie a chave e aguarde até 2 min)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FEATURE_DISABLED",
+                  "message": "Feature enable_wascer_api is disabled"
                 }
               }
             }
@@ -98,22 +110,30 @@
               }
             }
           },
-          "401": {
-            "description": "API key inválida ou ausente",
+          "403": {
+            "description": "Chave errada, revogada ou sem o escopo database:access",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FORBIDDEN",
+                  "message": "invalid api key"
                 }
               }
             }
           },
           "503": {
-            "description": "Feature desligada",
+            "description": "API ainda não ativa no container (crie a chave e aguarde até 2 min)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FEATURE_DISABLED",
+                  "message": "Feature enable_wascer_api is disabled"
                 }
               }
             }
@@ -171,51 +191,71 @@
             }
           },
           "400": {
-            "description": "Payload inválido",
+            "description": "Requisição inválida (corpo, filtro, cursor ou nome)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_INVALID_REQUEST",
+                  "message": "collection_name must match ^[a-zA-Z0-9_-]{1,64}$"
                 }
               }
             }
           },
-          "401": {
-            "description": "API key inválida ou ausente",
+          "403": {
+            "description": "Chave errada, revogada ou sem o escopo database:access",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FORBIDDEN",
+                  "message": "invalid api key"
                 }
               }
             }
           },
           "409": {
-            "description": "document_key já existe",
+            "description": "document_key já existe nesta collection",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_CONFLICT",
+                  "message": "document already exists"
                 }
               }
             }
           },
           "413": {
-            "description": "Payload acima de 500 KB",
+            "description": "data acima de 500 KB",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_PAYLOAD_TOO_LARGE",
+                  "message": "payload exceeds size limit"
                 }
               }
             }
           },
           "503": {
-            "description": "Feature desligada",
+            "description": "API ainda não ativa no container (crie a chave e aguarde até 2 min)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FEATURE_DISABLED",
+                  "message": "Feature enable_wascer_api is disabled"
                 }
               }
             }
@@ -296,22 +336,30 @@
               }
             }
           },
-          "401": {
-            "description": "API key inválida ou ausente",
+          "403": {
+            "description": "Chave errada, revogada ou sem o escopo database:access",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FORBIDDEN",
+                  "message": "invalid api key"
                 }
               }
             }
           },
           "503": {
-            "description": "Feature desligada",
+            "description": "API ainda não ativa no container (crie a chave e aguarde até 2 min)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FEATURE_DISABLED",
+                  "message": "Feature enable_wascer_api is disabled"
                 }
               }
             }
@@ -369,31 +417,43 @@
             }
           },
           "400": {
-            "description": "Filtro inválido",
+            "description": "Requisição inválida (corpo, filtro, cursor ou nome)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_INVALID_REQUEST",
+                  "message": "collection_name must match ^[a-zA-Z0-9_-]{1,64}$"
                 }
               }
             }
           },
-          "401": {
-            "description": "API key inválida ou ausente",
+          "403": {
+            "description": "Chave errada, revogada ou sem o escopo database:access",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FORBIDDEN",
+                  "message": "invalid api key"
                 }
               }
             }
           },
           "503": {
-            "description": "Feature desligada",
+            "description": "API ainda não ativa no container (crie a chave e aguarde até 2 min)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FEATURE_DISABLED",
+                  "message": "Feature enable_wascer_api is disabled"
                 }
               }
             }
@@ -450,12 +510,16 @@
               }
             }
           },
-          "401": {
-            "description": "API key inválida ou ausente",
+          "403": {
+            "description": "Chave errada, revogada ou sem o escopo database:access",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FORBIDDEN",
+                  "message": "invalid api key"
                 }
               }
             }
@@ -466,16 +530,24 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_NOT_FOUND",
+                  "message": "document not found"
                 }
               }
             }
           },
           "503": {
-            "description": "Feature desligada",
+            "description": "API ainda não ativa no container (crie a chave e aguarde até 2 min)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FEATURE_DISABLED",
+                  "message": "Feature enable_wascer_api is disabled"
                 }
               }
             }
@@ -539,32 +611,44 @@
               }
             }
           },
-          "401": {
-            "description": "API key inválida ou ausente",
+          "403": {
+            "description": "Chave errada, revogada ou sem o escopo database:access",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FORBIDDEN",
+                  "message": "invalid api key"
                 }
               }
             }
           },
           "413": {
-            "description": "Payload acima de 500 KB",
+            "description": "data acima de 500 KB",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_PAYLOAD_TOO_LARGE",
+                  "message": "payload exceeds size limit"
                 }
               }
             }
           },
           "503": {
-            "description": "Feature desligada",
+            "description": "API ainda não ativa no container (crie a chave e aguarde até 2 min)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FEATURE_DISABLED",
+                  "message": "Feature enable_wascer_api is disabled"
                 }
               }
             }
@@ -628,12 +712,16 @@
               }
             }
           },
-          "401": {
-            "description": "API key inválida ou ausente",
+          "403": {
+            "description": "Chave errada, revogada ou sem o escopo database:access",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FORBIDDEN",
+                  "message": "invalid api key"
                 }
               }
             }
@@ -644,16 +732,24 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_NOT_FOUND",
+                  "message": "document not found"
                 }
               }
             }
           },
           "503": {
-            "description": "Feature desligada",
+            "description": "API ainda não ativa no container (crie a chave e aguarde até 2 min)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FEATURE_DISABLED",
+                  "message": "Feature enable_wascer_api is disabled"
                 }
               }
             }
@@ -700,22 +796,30 @@
           "204": {
             "description": "Documento removido"
           },
-          "401": {
-            "description": "API key inválida ou ausente",
+          "403": {
+            "description": "Chave errada, revogada ou sem o escopo database:access",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FORBIDDEN",
+                  "message": "invalid api key"
                 }
               }
             }
           },
           "503": {
-            "description": "Feature desligada",
+            "description": "API ainda não ativa no container (crie a chave e aguarde até 2 min)",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/WascerErrorResponseDto"
+                },
+                "example": {
+                  "code": "WASCER_FEATURE_DISABLED",
+                  "message": "Feature enable_wascer_api is disabled"
                 }
               }
             }

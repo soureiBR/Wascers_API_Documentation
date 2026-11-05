@@ -32,7 +32,8 @@ a { color: var(--brand); }
 .w-step .n { display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--logo); color: #fff; font-weight: 700; font-size: 14px; margin-bottom: 12px; }
 .w-step h3 { margin: 0 0 6px; font-size: 16px; }
 .w-step p { margin: 0; color: var(--text2); font-size: 14px; line-height: 1.55; }
-code, .w-code { font-family: var(--mono); font-size: 0.88em; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; }
+/* Código em linha só no nosso conteúdo; o Swagger tem o estilo dele */
+.w-step code, .w-try code, .w-base code, .w-doc code, .g-doc :not(pre) > code, .w-ref-bar code { font-family: var(--mono); font-size: 0.88em; background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 1px 6px; }
 
 .w-try h2 { margin: 0 0 4px; font-size: 18px; }
 .w-try .sub { margin: 0 0 16px; color: var(--text2); font-size: 14px; }
@@ -249,3 +250,21 @@ html.dark-mode .swagger-ui .opblock-summary-path__deprecated::after { color: #fb
   .g-doc h1 { font-size: 26px; }
   .g-doc table { display: block; overflow-x: auto; }
 }
+
+/* Exemplos e respostas do Swagger: mesmo bloco escuro do guia, nos dois temas */
+.swagger-ui .highlight-code > .microlight, .swagger-ui pre.microlight, .swagger-ui .example.microlight, .swagger-ui .body-param__example { background: #0b1b2e !important; border: 1px solid #1f3050 !important; border-radius: 10px !important; padding: 14px !important; }
+.swagger-ui .microlight, .swagger-ui .microlight code, .swagger-ui .microlight code span { font-family: var(--mono) !important; font-size: 13px !important; background: transparent !important; border: 0 !important; padding: 0 !important; }
+.swagger-ui textarea.body-param__text { background: #0b1b2e !important; color: #e6ecf5 !important; border: 1px solid #1f3050 !important; border-radius: 10px; font-family: var(--mono); }
+.swagger-ui .copy-to-clipboard { background: #0f2440; border-radius: 6px; }
+
+/* O bloco Servers do Swagger sai; no lugar, uma linha dizendo onde as rotas batem */
+.swagger-ui .scheme-container { display: none !important; }
+.w-ref-bar { display: block; margin: 0 0 16px; line-height: 1.6; padding: 12px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; font-size: 14px; color: var(--text2); }
+.w-ref-bar b { color: var(--text); }
+.w-ref-bar.empty { border-style: dashed; }
+.w-ref-sub { margin: -6px 0 14px; color: var(--text2); font-size: 14px; }
+html.dark-mode .swagger-ui .highlight-code > .microlight, html.dark-mode .swagger-ui pre.microlight, html.dark-mode .swagger-ui .example.microlight, html.dark-mode .swagger-ui .microlight { background: #081222 !important; border-color: #1f3050 !important; }
+html.dark-mode .swagger-ui .opblock .opblock-section-header, html.dark-mode .swagger-ui .opblock-body .opblock-section-header { background: var(--surface2) !important; }
+html.dark-mode .swagger-ui .opblock .opblock-section-header h4, html.dark-mode .swagger-ui .opblock .opblock-section-header label { color: var(--text) !important; }
+html.dark-mode .swagger-ui .opblock .highlight-code pre.microlight, html.dark-mode .swagger-ui .opblock pre.microlight, html.dark-mode .swagger-ui .opblock .opblock-body pre.microlight { background: #081222 !important; color: #e6ecf5; }
+.swagger-ui .opblock .highlight-code pre.microlight, .swagger-ui .opblock pre.microlight { background: #0b1b2e !important; color: #e6ecf5; }
