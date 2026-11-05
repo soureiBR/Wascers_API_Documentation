@@ -23,6 +23,7 @@
       var isDark = document.documentElement.classList.toggle('dark-mode');
       try { localStorage.setItem(KEY, isDark ? 'dark' : 'light'); } catch (e) {}
       label();
+      document.dispatchEvent(new Event('wascer-theme'));
     });
     label();
   });

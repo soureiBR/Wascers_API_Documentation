@@ -271,3 +271,12 @@ html.dark-mode .swagger-ui .opblock .highlight-code pre.microlight, html.dark-mo
 .w-open-ai { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 .w-open-ai .w-btn { padding: 8px 16px; font-size: 14px; }
 @media (max-width: 720px) { .w-open-ai .w-btn { flex: 1 1 140px; text-align: center; } }
+
+/* Exemplos do Swagger em fundo claro, como bloco de código normal (claro no
+   tema claro, superfície escura só no tema escuro). Fica por último pra vencer
+   as regras de antes. */
+.swagger-ui .opblock .highlight-code pre.microlight, .swagger-ui .opblock pre.microlight, .swagger-ui .highlight-code > .microlight, .swagger-ui pre.microlight, .swagger-ui .example.microlight, .swagger-ui .body-param__example { background: var(--surface2) !important; color: var(--text) !important; border: 1px solid var(--border) !important; border-radius: 10px !important; }
+.swagger-ui textarea.body-param__text { background: var(--surface2) !important; color: var(--text) !important; border: 1px solid var(--border) !important; }
+.swagger-ui .microlight code span { color: inherit; }
+.swagger-ui .microlight .hljs-attr, .swagger-ui .microlight code span[style*="color"] { font-weight: 500; }
+html.dark-mode .swagger-ui .opblock .highlight-code pre.microlight, html.dark-mode .swagger-ui .opblock pre.microlight, html.dark-mode .swagger-ui pre.microlight, html.dark-mode .swagger-ui .body-param__example { background: var(--surface2) !important; color: var(--text) !important; border-color: var(--border) !important; }

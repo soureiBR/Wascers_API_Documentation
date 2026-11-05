@@ -6,8 +6,8 @@
   <title>Guia da Database API · Wascer Docs</title>
   <link rel="alternate" type="text/markdown" href="database-api.md">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
-  <link rel="stylesheet" href="wascer.css">
-  <script src="theme.js"></script>
+  <link rel="stylesheet" href="wascer.css?v=20261105">
+  <script src="theme.js?v=20261105"></script>
 </head>
 <body>
   <header class="w-header"><div class="in">
@@ -28,8 +28,6 @@
           <button type="button" class="g-menu-btn g-menu-more" id="more" aria-expanded="false" aria-label="Mais opções">▾</button>
           <div class="g-menu-list" id="more-list" hidden>
             <a href="database-api.md" target="_blank" rel="noreferrer">Ver como Markdown</a>
-            <a id="open-chatgpt" target="_blank" rel="noreferrer">Abrir no ChatGPT</a>
-            <a id="open-claude" target="_blank" rel="noreferrer">Abrir no Claude</a>
           </div>
         </div>
       </div>
@@ -41,10 +39,6 @@
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.10.0/build/highlight.min.js"></script>
   <script>
     // O guia tem uma fonte só: database-api.md, que agentes também leem cru.
-    var MD_URL = 'https://docs.wascer.com/database-api.md';
-    var ASK = 'Leia a documentação da Wascer Database API em ' + MD_URL + ' e me ajude a usar essa API.';
-    document.getElementById('open-chatgpt').href = 'https://chatgpt.com/?q=' + encodeURIComponent(ASK);
-    document.getElementById('open-claude').href = 'https://claude.ai/new?q=' + encodeURIComponent(ASK);
 
     function slug(t) {
       return t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
