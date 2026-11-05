@@ -4,14 +4,16 @@ API REST para ler e gravar no **Database** (store) do seu container sGTM da Wasc
 
 Referência interativa: https://docs.wascer.com/
 
-## 1. O que você precisa
+## 1. Como começar
 
-1. **Uma API key** com o escopo `database:access`: painel → **Configurações** → **Chaves de API** → **Criar Chave de API** → marque `database:access`. Use a **API Key** (`pk_…`), não o API Secret.
+1. **Crie a chave.** No painel da Wascer: **Configurações → Chaves de API → Criar Chave de API**, marque o escopo `database:access` e crie. Copie a **API Key** (começa com `pk_`); o API Secret não é usado nesta API.
    - A chave vale para todos os containers da sua conta e começa a funcionar em até ~2 minutos.
    - A IP Whitelist da chave não se aplica a esta API.
-   - Para ver os mesmos dados no painel, ative a aba **Database** do container.
    - Revogar a chave no painel corta o acesso em até ~2 minutos.
-2. **O host do container**: o mesmo domínio do seu GTM server-side (`<identificador>.soureicdn.com` ou o domínio próprio configurado no container).
+2. **Pegue o domínio do container**: o mesmo do seu GTM server-side (`<identificador>.soureicdn.com` ou o domínio próprio, na aba **Domínios** do container).
+3. **Teste:** `curl -s "https://<domínio>/wascer-api/<API_KEY>/v1/store/collections"` deve listar as suas collections. Se vier `403`, confira a chave e o escopo; `503`, espere os 2 minutos da ativação.
+
+Para testar pelo navegador, abra https://docs.wascer.com/, preencha domínio e API Key no topo e use **Try it out**.
 
 ## 2. URL base
 
