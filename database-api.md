@@ -44,24 +44,25 @@ A chave vai no caminho da URL. Trate a URL inteira como segredo.
 | PUT | `/collections/{c}/documents/{key}` | Cria ou substitui: `{ "data": {...} }` |
 | PATCH | `/collections/{c}/documents/{key}` | Mescla campos no primeiro nível: `{ "data": {...} }` |
 | DELETE | `/collections/{c}/documents/{key}` | Remove (204) |
+| POST | `/collections/{c}/documents/query` | Busca por campo do `data` (ver seção 5) |
 
 Listagens devolvem `{ documents, next_cursor, order, limit }`. Para a próxima página, repita a chamada com `cursor=<next_cursor>` até `next_cursor` ser `null`.
 
 ## 5. Encontrar documentos (ex.: compras com gclid)
 
-Ainda não há busca por campo na API. Para filtrar, liste do mais recente para o mais antigo e filtre do seu lado:
+Use a busca por campo. Ela filtra pelo conteúdo do `data`, do mais recente para o mais antigo:
 
 ```
-GET /collections/{c}/documents?order=DESC&limit=500
-GET /collections/{c}/documents?order=DESC&limit=500&cursor=<next_cursor>
+POST /collections/{c}/documents/query
+{"filter":{"conditions":[{"field":"gclid","operator":"exists"}]}}
 ```
 
-- Repita com o `next_cursor` até ele vir `null`, ou até passar da data que você precisa (`created_at` em ordem decrescente).
+- Operadores: `equal`, `not-equal`, `exists`, `not-exists`, `contains`, `not-contains`, `gt`/`gte`/`lt`/`lte`; combine com `{"operator":"and"|"or","conditions":[...]}` (até 10 condições). Campo aninhado com ponto: `user_data.email`.
+- Limite a janela com `created_after` / `created_before` (ISO 8601) no corpo.
+- Cada chamada lê no máximo 1000 documentos e devolve `{ documents, next_cursor, scanned, order, limit }`. Enquanto `next_cursor` não for `null`, repita com `"cursor":"<next_cursor>"`: página vazia com `next_cursor` preenchido não quer dizer que acabou.
 - Se você controla a gravação, salve já pensando na consulta: uma collection por tipo (ex.: `purchases`) e a `document_key` igual ao ID que você vai procurar (ex.: número do pedido), para ler direto com `GET /collections/purchases/documents/{pedido}`.
 
-### Em breve: busca por campo
-
-A rota `POST /collections/{c}/documents/query` já foi feita e está sendo liberada aos poucos nos containers. Ela filtra pelo conteúdo do `data` (ex.: `{"filter":{"conditions":[{"field":"gclid","operator":"exists"}]}}`) sem você precisar listar tudo. Enquanto não chegar no seu container ela responde erro (a requisição cai no sGTM); até lá, use a listagem acima.
+Se a busca responder erro em vez de JSON da API, o container ainda está numa versão antiga: liste com `GET /collections/{c}/documents?order=DESC&limit=500`, siga o `next_cursor` e filtre do seu lado.
 
 ## 6. Erros
 
@@ -85,7 +86,9 @@ curl -s "$BASE/collections"
 
 curl -s "$BASE/collections/purchases/documents?limit=10&order=DESC"
 
-curl -s "$BASE/collections/purchases/documents?order=DESC&limit=500"
+curl -s -X POST "$BASE/collections/purchases/documents/query" \
+  -H 'Content-Type: application/json' \
+  -d '{"filter":{"conditions":[{"field":"gclid","operator":"exists"}]}}'
 
 curl -s -X PUT "$BASE/collections/purchases/documents/ORDER-123" \
   -H 'Content-Type: application/json' \
@@ -95,6 +98,6 @@ curl -s -X PUT "$BASE/collections/purchases/documents/ORDER-123" \
 ## 8. Instruções para agentes de IA
 
 - Comece por `GET /collections` e por uma listagem com `limit=5` para entender o formato de `data` antes de filtrar.
-- Para encontrar registros, liste com `order=DESC&limit=500`, filtre localmente e siga `next_cursor` até `null` ou até passar da data desejada; não conclua que não há resultados enquanto houver `next_cursor`.
+- Para encontrar registros por campo, use `POST /collections/{c}/documents/query` e siga `next_cursor` até `null`; não conclua que não há resultados enquanto houver `next_cursor`. Se a rota não existir no container, liste com `order=DESC&limit=500` e filtre localmente.
 - Não escreva nem apague (POST/PUT/PATCH/DELETE) sem pedido explícito do usuário.
 - Não repita a API key em respostas, logs ou arquivos; prefira a variável `WASCER_API_KEY`.

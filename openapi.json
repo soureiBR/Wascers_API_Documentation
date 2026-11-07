@@ -373,7 +373,7 @@
     },
     "/wascer-api/{api_key}/v1/store/collections/{collection_name}/documents/query": {
       "post": {
-        "description": "**Em breve.** Esta rota já foi feita e está sendo liberada aos poucos nos containers. Enquanto não chegar no seu, ela responde erro (a requisição cai no sGTM): use a listagem (`GET …/documents?order=DESC`) e filtre do seu lado.\n\nFiltra a collection por campos do `data`, do mais recente para o mais antigo. Cada chamada lê no máximo 1000 documentos; enquanto `next_cursor` não for nulo, chame de novo com ele para continuar. Use `created_after`/`created_before` para limitar a janela.",
+        "description": "Filtra a collection por campos do `data`, do mais recente para o mais antigo. Cada chamada lê no máximo 1000 documentos; enquanto `next_cursor` não for nulo, chame de novo com ele para continuar. Use `created_after`/`created_before` para limitar a janela.",
         "operationId": "WascerApiController_queryDocuments",
         "parameters": [
           {
@@ -459,11 +459,10 @@
             }
           }
         },
-        "summary": "Em breve: buscar documentos por campo",
+        "summary": "Buscar documentos por campo",
         "tags": [
           "Wascer API — Collections & Documents"
-        ],
-        "deprecated": true
+        ]
       }
     },
     "/wascer-api/{api_key}/v1/store/collections/{collection_name}/documents/{document_key}": {
