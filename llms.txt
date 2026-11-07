@@ -4,7 +4,7 @@
 
 ## Database (store do container sGTM)
 
-- [Guia completo da Database API](https://docs.wascer.com/database-api.md): autenticação, URL base, modelo de dados, endpoints, listagem com paginação, busca por campo (em breve), erros e instruções para agentes.
+- [Guia completo da Database API](https://docs.wascer.com/database-api.md): autenticação, URL base, modelo de dados, endpoints, listagem com paginação, busca por campo, erros e instruções para agentes.
 - [OpenAPI 3](https://docs.wascer.com/openapi.json): especificação das rotas `/wascer-api/{api_key}/v1/store`.
 - [Referência interativa](https://docs.wascer.com/): Swagger UI.
 - [Guia formatado](https://docs.wascer.com/guia.html): o mesmo guia em HTML.
