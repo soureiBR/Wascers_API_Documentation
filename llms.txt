@@ -8,3 +8,8 @@
 - [OpenAPI 3](https://docs.wascer.com/openapi.json): especificação das rotas `/wascer-api/{api_key}/v1/store`.
 - [Referência interativa](https://docs.wascer.com/): Swagger UI.
 - [Guia formatado](https://docs.wascer.com/guia.html): o mesmo guia em HTML.
+
+## Lojas (admin.wascer.com)
+
+- [Guia das Lojas Wascer](https://docs.wascer.com/lojas.md): plataforma de lojas virtuais e sites de captação de leads (admin.wascer.com/<loja>), módulos padrão x apps, tipo de loja (ecommerce ou lead), app Wascer de rastreamento (sGTM ou Cloudflare Zaraz, dataLayer GA4), catálogos automáticos no Google Merchant Center e na Meta, apps WhatsApp (Cloud API oficial ou não oficial) e E-mail (Cloudflare Email Service), rotas da API do admin e instruções para agentes.
+- [Guia formatado](https://docs.wascer.com/lojas.html): o mesmo guia em HTML.
