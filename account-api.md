@@ -31,7 +31,7 @@ Authorization: Bearer wc_us_<43 caracteres>
 ```
 
 - A chave é segredo. Nunca a coloque em código de front-end, em URL ou em log.
-- Mande sempre um `x-request-id` (um UUID por requisição). Ele entra na assinatura da resposta e ajuda o suporte a achar a sua chamada.
+- Mande sempre um `x-request-id` (um UUID por requisição). Ele entra na assinatura da resposta e ajuda o suporte a achar a sua chamada. Formato aceito: letras, números, `-` e `_`, até 128 caracteres. Fora disso, a API troca o valor por um UUID gerado por ela.
 
 ## 3. Tipos de chave
 
@@ -140,7 +140,7 @@ X-Wascer-Signature: t=<timestamp>,v1=<hex>
 Com ela você confirma que a resposta veio da Wascer e não foi alterada. O segredo é derivado da sua própria chave; nada é trocado além dela.
 
 1. `segredo` = HKDF-SHA256(chave, salt vazio, info `wc-response-v1`, 32 bytes)
-2. `mensagem` = `<t>.<x-request-id>.<status>.` + corpo da resposta (bytes exatos, sem reformatar o JSON)
+2. `mensagem` = `<t>.<x-request-id>.<status>.` + corpo da resposta (bytes exatos, sem reformatar o JSON). Use o `x-request-id` **que volta na resposta**: é o que foi assinado, e ele só é igual ao que você mandou se estiver no formato aceito (seção 2).
 3. Compare `v1` com HMAC-SHA256(`segredo`, `mensagem`) em hex, usando comparação de tempo constante.
 
 **Node.js**
@@ -175,6 +175,10 @@ def verify(key: str, request_id: str, status: int, raw_body: bytes, header: str)
     expected = hmac.new(secret, msg, hashlib.sha256).hexdigest()
     return hmac.compare_digest(expected, parts["v1"])
 ```
+
+Nos exemplos, `requestId` é o header `x-request-id` da resposta.
+
+Respostas sem assinatura: `401`, corpo acima de 5 MB e streams (`text/event-stream`).
 
 `t` é o horário da resposta em segundos desde 1970. Rejeite também respostas com `t` muito antigo (por exemplo, mais de 5 minutos), para evitar repetição.
 
